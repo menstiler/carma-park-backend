@@ -1,6 +1,6 @@
-class CreateSpaces < ActiveRecord::Migration[5.2]
+class CreateSpots < ActiveRecord::Migration[5.2]
   def change
-    create_table :spaces do |t|
+    create_table :spots do |t|
       t.string :longitude
       t.string :latitude
 
