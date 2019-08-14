@@ -10,16 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_07_160204) do
+ActiveRecord::Schema.define(version: 2019_08_14_142023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "chatrooms", force: :cascade do |t|
+    t.integer "space"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "content"
+    t.integer "user_id"
+    t.integer "chatroom_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "spaces", force: :cascade do |t|
     t.string "longitude"
     t.string "latitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "claimed", default: false
+    t.integer "owner"
+    t.string "address"
+    t.integer "claimer"
+    t.boolean "available"
+    t.bigint "deadline"
   end
 
   create_table "user_spaces", force: :cascade do |t|
