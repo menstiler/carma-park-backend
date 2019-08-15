@@ -21,7 +21,54 @@ class SpacesController < ApplicationController
       space.update(deadline: milliseconds_since)
     end
     space.update(available: true)
-    render json: space
+    serialized_data = ActiveModelSerializers::Adapter::Json.new(
+      SpaceSerializer.new(space)
+    ).serializable_hash
+    ActionCable.server.broadcast 'spaces_channel', {update: false, delete: false, space: serialized_data}
+    head :ok
+    # render json: space
+  end
+
+  def claim
+    user_space = UserSpace.create(user_id: params[:user_id], space_id: params[:space_id])
+    space = Space.find(params[:space_id])
+    space.update(claimed: true, claimer: user_space.user_id)
+    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    head :ok
+    # render json: space
+  end
+
+  def cancel_claim
+    user_space = UserSpace.where(user_id: params[:user_id], space_id: params[:space_id]).destroy_all
+    space = Space.find(params[:space_id])
+    space.update(claimed: false, claimer: nil)
+    chatroom = Chatroom.find_by(space: space.id)
+    if chatroom
+      chatroom.destroy
+    end
+    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    head :ok
+  end
+
+  def remove_space
+    space = Space.find(params[:space_id])
+    space.update(available: false)
+    ActionCable.server.broadcast 'spaces_channel', {update: false, delete: true, space: space}
+    head :ok
+  end
+
+  def parked
+    space = Space.find(params[:space_id])
+    space.update(owner: params[:user_id])
+    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    head :ok
+  end
+
+  def add_space_after_park
+    space = Space.find(params[:space_id])
+    space.update(claimed: false, claimer: nil)
+    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    head :ok
   end
 
   def destroy

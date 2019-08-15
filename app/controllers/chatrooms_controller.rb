@@ -14,6 +14,11 @@ class ChatroomsController < ApplicationController
     head :ok
   end
 
+  def destroy
+    chatroom = Chatroom.find_by(space: params[:id])
+    chatroom.destroy
+  end
+
   private
 
   def chatroom_params
