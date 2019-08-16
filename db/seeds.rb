@@ -1,7 +1,7 @@
 
-User.create(name: "Mendel", username: '1')
-User.create(name: "Tom", username: '2')
-User.create(name: "Fred", username: '3')
+User.create(name: "Mendel", username: '1', password: '1')
+User.create(name: "Tom", username: '2', password: '2')
+User.create(name: "Fred", username: '3', password: '3')
 
 locations = [
   ["-74.0693417333333", "40.7259088", "780 Montgomery St, Jersey City, NJ 07306, USA"],
