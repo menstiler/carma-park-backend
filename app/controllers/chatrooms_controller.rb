@@ -10,13 +10,8 @@ class ChatroomsController < ApplicationController
     serialized_data = ActiveModelSerializers::Adapter::Json.new(
       ChatroomSerializer.new(chatroom)
     ).serializable_hash
-    ActionCable.server.broadcast 'chatrooms_channel', serialized_data
+    ActionCable.server.broadcast 'chatrooms_channel', {action: 'create', chatroom: serialized_data}
     head :ok
-  end
-
-  def destroy
-    chatroom = Chatroom.find_by(space: params[:id])
-    chatroom.destroy
   end
 
   private

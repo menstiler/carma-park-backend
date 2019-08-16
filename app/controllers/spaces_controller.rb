@@ -21,10 +21,10 @@ class SpacesController < ApplicationController
       space.update(deadline: milliseconds_since)
     end
     space.update(available: true)
-    serialized_data = ActiveModelSerializers::Adapter::Json.new(
-      SpaceSerializer.new(space)
-    ).serializable_hash
-    ActionCable.server.broadcast 'spaces_channel', {update: false, delete: false, space: serialized_data}
+    # serialized_data = ActiveModelSerializers::Adapter::Json.new(
+    #   SpaceSerializer.new(space)
+    # ).serializable_hash
+    ActionCable.server.broadcast 'spaces_channel', {action: 'create', space: space}
     head :ok
     # render json: space
   end
@@ -33,7 +33,7 @@ class SpacesController < ApplicationController
     user_space = UserSpace.create(user_id: params[:user_id], space_id: params[:space_id])
     space = Space.find(params[:space_id])
     space.update(claimed: true, claimer: user_space.user_id)
-    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
     head :ok
     # render json: space
   end
@@ -46,28 +46,34 @@ class SpacesController < ApplicationController
     if chatroom
       chatroom.destroy
     end
-    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
+    ActionCable.server.broadcast 'chatrooms_channel', {action: 'delete', chatroom: chatroom}
     head :ok
   end
 
   def remove_space
     space = Space.find(params[:space_id])
     space.update(available: false)
-    ActionCable.server.broadcast 'spaces_channel', {update: false, delete: true, space: space}
+    ActionCable.server.broadcast 'spaces_channel', {action: 'delete', space: space}
     head :ok
   end
 
   def parked
     space = Space.find(params[:space_id])
     space.update(owner: params[:user_id])
-    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    chatroom = Chatroom.find_by(space: space.id)
+    if chatroom
+      chatroom.destroy
+    end
+    ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
+    ActionCable.server.broadcast 'chatrooms_channel', {action: 'delete', chatroom: chatroom}
     head :ok
   end
 
   def add_space_after_park
     space = Space.find(params[:space_id])
     space.update(claimed: false, claimer: nil)
-    ActionCable.server.broadcast 'spaces_channel', {update: true, delete: false, space: space}
+    ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
     head :ok
   end
 

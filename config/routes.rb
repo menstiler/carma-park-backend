@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   post '/add_space_after_park' => "spaces#add_space_after_park"
 
 
-  resources :chatrooms, only: [:index, :create, :destroy]
+  resources :chatrooms, only: [:index, :create]
   resources :messages, only: [:create]
   resources :users
   resources :user_spaces
