@@ -1,3 +1,3 @@
 class SpaceSerializer < ActiveModel::Serializer
-  attributes :id, :longitude, :latitude, :claimed, :owner, :address, :claimer, :available, :deadline
+  attributes :id, :longitude, :latitude, :claimed, :owner, :address, :claimer, :available, :deadline, :image
 end

@@ -6,7 +6,7 @@ class AuthController < ApplicationController
       token = encode_token(user.id)
       render json: {user: user, token: token}
     else
-      render json: {errors: "You dun goofed!"}
+      render json: {errors: "Something went wrong! Please try again!"}
     end
   end
 
@@ -14,7 +14,7 @@ class AuthController < ApplicationController
     if session_user
       render json: session_user
     else
-      render json: {errors: "That ain't no user I ever heard of!"}
+      render json: {errors: "Please enter a valid user!"}
     end
   end
 end

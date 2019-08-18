@@ -24,6 +24,8 @@ class SpacesController < ApplicationController
     # serialized_data = ActiveModelSerializers::Adapter::Json.new(
     #   SpaceSerializer.new(space)
     # ).serializable_hash
+    note = Notification.create(user_id: space.owner, message: "Successfully created parking spot at #{space.address}")
+    ActionCable.server.broadcast 'notifications_channel', note
     ActionCable.server.broadcast 'spaces_channel', {action: 'create', space: space}
     head :ok
     # render json: space
@@ -32,7 +34,12 @@ class SpacesController < ApplicationController
   def claim
     user_space = UserSpace.create(user_id: params[:user_id], space_id: params[:space_id])
     space = Space.find(params[:space_id])
+    claimer = User.find(user_space.user_id)
     space.update(claimed: true, claimer: user_space.user_id)
+    note1 = Notification.create(user_id: space.owner, message: "#{claimer.name} has claimed the spot at #{space.address}")
+    note2 = Notification.create(user_id: space.claimer, message: "Successfully claimed parking spot at #{space.address}")
+    ActionCable.server.broadcast 'notifications_channel', note1
+    ActionCable.server.broadcast 'notifications_channel', note2
     ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
     head :ok
     # render json: space
@@ -41,12 +48,17 @@ class SpacesController < ApplicationController
   def cancel_claim
     user_space = UserSpace.where(user_id: params[:user_id], space_id: params[:space_id]).destroy_all
     space = Space.find(params[:space_id])
+    claimer = User.find(space.claimer)
+    note1 = Notification.create(user_id: space.owner, message: "#{claimer.name} has canceled his claim")
+    note2 = Notification.create(user_id: claimer.id, message: "Successfully canceled claim on parking spot at #{space.address}")
     space.update(claimed: false, claimer: nil)
     chatroom = Chatroom.find_by(space: space.id)
     if chatroom
       chatroom.destroy
     end
     ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
+    ActionCable.server.broadcast 'notifications_channel', note1
+    ActionCable.server.broadcast 'notifications_channel', note2
     ActionCable.server.broadcast 'chatrooms_channel', {action: 'delete', chatroom: chatroom}
     head :ok
   end
@@ -54,17 +66,23 @@ class SpacesController < ApplicationController
   def remove_space
     space = Space.find(params[:space_id])
     space.update(available: false)
+    note = Notification.create(user_id: space.owner, message: "Successfully canceled parking spot")
+    ActionCable.server.broadcast 'notifications_channel', note
     ActionCable.server.broadcast 'spaces_channel', {action: 'delete', space: space}
     head :ok
   end
 
   def parked
     space = Space.find(params[:space_id])
+    original_owner = User.find(space.owner)
+    claimer = User.find(space.claimer)
+    note = Notification.create(user_id: original_owner.id, message: "#{claimer.name} has parked")
     space.update(owner: params[:user_id])
     chatroom = Chatroom.find_by(space: space.id)
     if chatroom
       chatroom.destroy
     end
+    ActionCable.server.broadcast 'notifications_channel', note
     ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
     ActionCable.server.broadcast 'chatrooms_channel', {action: 'delete', chatroom: chatroom}
     head :ok
@@ -92,6 +110,6 @@ class SpacesController < ApplicationController
   private
 
   def space_params
-    params.require(:space).permit(:longitude, :latitude, :address, :owner, :deadline)
+    params.require(:space).permit(:longitude, :latitude, :address, :owner, :deadline, :image)
   end
 end
