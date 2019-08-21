@@ -4,21 +4,33 @@ User.create(name: "Tom", username: '2', password: '2')
 User.create(name: "Fred", username: '3', password: '3')
 
 locations = [
-  ["-74.0693417333333", "40.7259088", "780 Montgomery St, Jersey City, NJ 07306, USA"],
-  ["-73.9389079617296", "40.6645073", "780 Montgomery St, Brooklyn, NY 11213, USA"],
-  ["-74.01407030000001", "40.7052529", "11 Broadway, New York, NY 10004, USA"],
-  ["-74.0138074", "40.7054375", "25 Broadway, New York, NY, USA"],
-  ["-74.01382800000002", "40.7053417", "15 Broadway Manhattan New York New York County New York United States 10004"],
-  ["-74.01396260000001", "40.7050088", "20 Broadway, New York, NY 10004, USA"],
-  ["-73.9539965", "40.7069093", "11 Broadway, Brooklyn, NY 11249, USA"],
-  ["-74.3688169473684", "40.5923936184211", "45 Rolling Brook Dr, Edison, NJ 08820, USA"]
+  ["-73.939592", "40.66467", "760 Montgomery Street, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.66467,-73.939592&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-74.012919", "40.707801", "12 Rector Street, Manhattan, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.707801,-74.012919&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-73.944715", "40.666714", "1334 Carroll Street, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.666714,-73.944715&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-73.935565", "40.667249", "1756 President Street, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.667249,-73.935565&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-73.946215", "40.66925", "670 Eastern Parkway, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.66925,-73.946215&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-73.93891", "40.664616", "780 Montgomery Street, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.664616,-73.93891&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-74.009126", "40.709294", "56 Liberty Place, Manhattan, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.709294,-74.009126&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-117.738165", "33.602281", "5 Blackbird Lane, Aliso Viejo, 92656", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=33.602281,-117.738165&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"]
+]
+
+location2 = [
+  ["-74.3688169473684", "40.5923936184211", "45 Rolling Brook Dr, Edison, NJ", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=42.189531,-72.783316&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-74.01159653282929", "40.71094497870827", "1 World Trade Center, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.71094497870827,-74.01159653282929&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-73.998145", "40.727934", "10 Water Street, Manhattan, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.727934,-73.998145&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-74.011616", "40.707717", "20 Wall Street, Manhattan, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.707717,-74.011616&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-73.98965799999999", "40.741103499999994", "Flatiron Building, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.741103499999994,-73.98965799999999&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-74.010189", "40.705068", "56 Beaver Street, Manhattan, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.705068,-74.010189&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
+  ["-74.005097", "40.715815", "12 Thomas Street, Manhattan, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.715815,-74.005097&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"]
 ]
 
 locations.each do |location|
-  Space.create(longitude: location[0],latitude: location[1], address: location[2] ,claimed: false, owner: User.find(1).id, claimer: nil, available: true)
+  Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: User.find(1).id, claimer: nil, available: true, image: location[3])
 end
 
-
-UserSpace.create(user_id: User.find(1).id, space_id: Space.find(1).id)
-UserSpace.create(user_id: User.find(2).id, space_id: Space.find(2).id)
-UserSpace.create(user_id: User.find(3).id, space_id: Space.find(3).id)
+location2.each do |location|
+  Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: User.find(2).id, claimer: nil, available: true, image: location[3])
+end
+# UserSpace.create(user_id: User.find(1).id, space_id: Space.find(1).id)
+# UserSpace.create(user_id: User.find(2).id, space_id: Space.find(2).id)
+# UserSpace.create(user_id: User.find(3).id, space_id: Space.find(3).id)

@@ -8,6 +8,11 @@ class NotificationsController < ApplicationController
   def destroy
     notification = Notification.find(params[:id])
     notification.destroy
+    render json: notification
+  end
+
+  def remove_all
+    Notification.where(user_id: params[:user_id]).destroy_all
   end
 
 end

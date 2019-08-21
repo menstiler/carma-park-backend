@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   mount ActionCable.server => '/cable'
 
   post "/add_favorites" => "favorites#add_favorites"
@@ -11,6 +10,7 @@ Rails.application.routes.draw do
   post '/remove_space' => "spaces#remove_space"
   post '/parked' => "spaces#parked"
   post '/add_space_after_park' => "spaces#add_space_after_park"
+  post "/remove_all", to: "notifications#remove_all"
 
   resources :notifications, only: [:index, :destroy]
   resources :chatrooms, only: [:index, :create]
