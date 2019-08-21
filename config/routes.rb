@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
+
+  post "/add_favorites" => "favorites#add_favorites"
+  delete "/remove_favorite/:id" => "favorites#remove_favorite"
   post "/login", to: "auth#login"
   get "/auto_login", to: "auth#auto_login"
   post '/claim' => "spaces#claim"

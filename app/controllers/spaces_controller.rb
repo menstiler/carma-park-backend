@@ -35,7 +35,7 @@ class SpacesController < ApplicationController
     user_space = UserSpace.create(user_id: params[:user_id], space_id: params[:space_id])
     space = Space.find(params[:space_id])
     claimer = User.find(user_space.user_id)
-    space.update(claimed: true, claimer: user_space.user_id)
+    space.update(claimed: true, claimer: user_space.user_id, deadline: nil)
     note1 = Notification.create(user_id: space.owner, message: "#{claimer.name} has claimed the spot at #{space.address}")
     note2 = Notification.create(user_id: space.claimer, message: "Successfully claimed parking spot at #{space.address}")
     ActionCable.server.broadcast 'notifications_channel', note1
@@ -91,6 +91,8 @@ class SpacesController < ApplicationController
   def add_space_after_park
     space = Space.find(params[:space_id])
     space.update(claimed: false, claimer: nil)
+    note = Notification.create(user_id: space.owner, message: "Successfully created parking spot at #{space.address}")
+    ActionCable.server.broadcast 'notifications_channel', note
     ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space}
     head :ok
   end

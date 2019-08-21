@@ -1,4 +1,4 @@
 class ChatroomSerializer < ActiveModel::Serializer
-  attributes :id, :space
+  attributes :id, :space, :creator
   has_many :messages
 end
