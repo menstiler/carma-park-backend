@@ -13,9 +13,11 @@ class UsersController < ApplicationController
     user = User.new(user_params)
     if user.save
       token = encode_token(user.id)
-      render json: {user: user, token: token}
+      ActionCable.server.broadcast 'users_channel', {action: 'create', user: user, token: token}
+      # render json: {user: user, token: token}
     else
-      render json: {errors: user.errors.full_messages}
+      ActionCable.server.broadcast 'users_channel', {errors: user.errors.full_messages}
+      # render json: {errors: user.errors.full_messages}
     end
   end
 
