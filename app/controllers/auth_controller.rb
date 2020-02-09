@@ -1,10 +1,11 @@
 class AuthController < ApplicationController
-
+  
   def login
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
       token = encode_token(user.id)
-      render json: {user: user, token: token}
+      user_string = UserSerializer.new(user)
+      render json: { user: user_string, token: token }
     else
       render json: {errors: "Something went wrong! Please try again!"}
     end

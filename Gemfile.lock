@@ -187,6 +187,7 @@ DEPENDENCIES
   byebug
   dotenv-rails
   env
+  fast_jsonapi
   geocoder
   jwt
   pg (>= 0.18, < 2.0)
