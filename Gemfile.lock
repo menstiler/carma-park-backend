@@ -58,6 +58,8 @@ GEM
     concurrent-ruby (1.1.5)
     crass (1.0.4)
     erubi (1.8.0)
+    fast_jsonapi (1.5)
+      activesupport (>= 4.2)
     ffi (1.11.1)
     geocoder (1.5.1)
     globalid (0.4.2)
@@ -149,6 +151,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.1.0)
   byebug
+  fast_jsonapi
   geocoder
   jwt
   listen (>= 3.0.5, < 3.2)
@@ -165,4 +168,4 @@ RUBY VERSION
    ruby 2.6.1p33
 
 BUNDLED WITH
-   2.0.1
+   2.0.2

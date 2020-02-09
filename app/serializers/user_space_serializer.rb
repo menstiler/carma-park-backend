@@ -1,3 +1,3 @@
 class UserSpaceSerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :space_id, :space
+  attributes :id, :user_id, :space_id, :space, :status
 end

@@ -1,7 +1,10 @@
 
-User.create(name: "Mendel", username: '1', password: '1')
-User.create(name: "Tom", username: '2', password: '2')
-User.create(name: "Fred", username: '3', password: '3')
+User.destroy_all
+Space.destroy_all
+
+mendel = User.create(name: "Mendel", username: '1', password: '1')
+tom = User.create(name: "Tom", username: '2', password: '2')
+fred = User.create(name: "Fred", username: '3', password: '3')
 
 locations = [
   ["-73.939592", "40.66467", "760 Montgomery Street, New York", "https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.66467,-73.939592&fov=90&heading=200&pitch=5&key=AIzaSyBXlqgVsRRwt4C-m-rMXsf4mhWELa7aqwk"],
@@ -25,11 +28,13 @@ location2 = [
 ]
 
 locations.each do |location|
-  Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: User.find(1).id, claimer: nil, available: true, image: location[3])
+  space = Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: mendel.id, claimer: nil, image: location[3])
+  UserSpace.create(space_id: space.id, user_id: space.owner, space: space, status: "created")
 end
 
 location2.each do |location|
-  Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: User.find(2).id, claimer: nil, available: true, image: location[3])
+  space = Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: tom.id, claimer: nil, image: location[3])
+  UserSpace.create(space_id: space.id, user_id: space.owner, space: space, status: "created")
 end
 # UserSpace.create(user_id: User.find(1).id, space_id: Space.find(1).id)
 # UserSpace.create(user_id: User.find(2).id, space_id: Space.find(2).id)

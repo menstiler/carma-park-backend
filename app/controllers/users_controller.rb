@@ -27,8 +27,9 @@ class UsersController < ApplicationController
     render json: user
   end
 
-  def delete
+  def destroy
     user = User.find(params[:id])
+    Space.where(owner: user.id).destroy_all
     user.destroy
   end
 
