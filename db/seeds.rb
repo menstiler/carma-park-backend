@@ -29,13 +29,12 @@ location2 = [
 
 locations.each do |location|
   space = Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: mendel.id, claimer: nil, image: location[3])
-  UserSpace.create(space_id: space.id, user_id: space.owner, space: space, status: "created")
+  UserSpace.create(space_id: space.id, user_id: space.owner)
+  SpaceLog.create(space_id: space.id, user_id: space.owner, space: space, users: space.users, status: "created")
 end
 
 location2.each do |location|
   space = Space.create(longitude: location[0],latitude: location[1], address: location[2], claimed: false, owner: tom.id, claimer: nil, image: location[3])
-  UserSpace.create(space_id: space.id, user_id: space.owner, space: space, status: "created")
+  UserSpace.create(space_id: space.id, user_id: space.owner)
+  SpaceLog.create(space_id: space.id, user_id: space.owner, space: space, users: space.users, status: "created")
 end
-# UserSpace.create(user_id: User.find(1).id, space_id: Space.find(1).id)
-# UserSpace.create(user_id: User.find(2).id, space_id: Space.find(2).id)
-# UserSpace.create(user_id: User.find(3).id, space_id: Space.find(3).id)
