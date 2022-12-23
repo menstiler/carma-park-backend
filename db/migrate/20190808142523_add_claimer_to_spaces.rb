@@ -1,4 +1,4 @@
-class AddClaimerToSpaces < ActiveRecord::Migration[5.2]
+class AddClaimerToSpaces < ActiveRecord::Migration[7.0]
   def change
     add_column :spaces, :claimer, :integer
   end

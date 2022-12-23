@@ -1,4 +1,4 @@
-class CreateUserSpaces < ActiveRecord::Migration[5.2]
+class CreateUserSpaces < ActiveRecord::Migration[7.0]
   def change
     create_table :user_spaces do |t|
       t.references :user, foreign_key: true
