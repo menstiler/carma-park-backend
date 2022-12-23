@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_18_231546) do
+ActiveRecord::Schema.define(version: 2020_12_01_232932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,17 @@ ActiveRecord::Schema.define(version: 2020_01_18_231546) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "space_logs", force: :cascade do |t|
+    t.string "status"
+    t.bigint "user_id"
+    t.integer "space_id"
+    t.json "space", default: {}
+    t.json "users", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_space_logs_on_user_id"
+  end
+
   create_table "spaces", force: :cascade do |t|
     t.string "longitude"
     t.string "latitude"
@@ -100,11 +111,18 @@ ActiveRecord::Schema.define(version: 2020_01_18_231546) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.string "password_digest"
+    t.json "car_image", default: {}
+    t.string "license_plate"
+    t.json "user_image", default: {}
+    t.string "car_make"
+    t.string "car_model"
+    t.string "uid"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "favorites", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "space_logs", "users"
   add_foreign_key "user_spaces", "spaces"
   add_foreign_key "user_spaces", "users"
 end

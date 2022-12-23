@@ -11,6 +11,17 @@ class AuthController < ApplicationController
     end
   end
 
+  def provider_login
+    profile = params['profileObj']
+    user = User.create_from_omniauth(profile)
+    if user.valid?
+      token = encode_token(user.id)
+      render json: { user: user.user_serialized, token: token }
+    else
+      render json: {errors: "Something went wrong! Please try again!"}
+    end
+  end 
+
   def auto_login
     if session_user
       render json: session_user
