@@ -5,7 +5,6 @@ class CreateSpaceLogs < ActiveRecord::Migration[5.2]
       t.references :user, foreign_key: true
       t.integer :space_id
       t.json :space, default: {}
-      t.json :users, default: {}
       t.timestamps
     end
   end

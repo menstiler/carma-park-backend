@@ -20,10 +20,9 @@ class SpacesController < ApplicationController
       milliseconds_since = new_time.to_f * 1000
       space.update(deadline: milliseconds_since)
     end
-    owner = User.find(space.owner)
-    UserSpace.create(space_id: space.id, user_id: space.owner)
-    space_log = SpaceLog.create(user_id: space.owner, space_id: space.id, space: space, users: space.users, status: "created")
-    note = Notification.create(user_id: space.owner, message: "Successfully created parking spot at #{space.address}")
+    owner = User.find(space.owner_id)
+    space_log = SpaceLog.create(user_id: space.owner_id, space_id: space.id, space: space, status: "created")
+    note = Notification.create(user_id: space.owner_id, message: "Successfully created parking spot at #{space.address}")
     ActionCable.server.broadcast 'notifications_channel', note
     ActionCable.server.broadcast 'spaces_channel', {action: 'create', space: space.space_serialized}
     ActionCable.server.broadcast 'users_channel', {action: 'create', user: owner.user_serialized}
@@ -33,13 +32,12 @@ class SpacesController < ApplicationController
   def claim
     space = Space.find(params[:space_id])
     claimer = User.find(params[:user_id])
-    space.update(claimed: true, claimer: params[:user_id], deadline: nil)
-    UserSpace.create(space_id: space.id, user_id: space.claimer)
-    note1 = Notification.create(user_id: space.owner, message: "#{claimer.name} has claimed the spot at #{space.address}")
-    note2 = Notification.create(user_id: space.claimer, message: "Successfully claimed parking spot at #{space.address}")
+    space.update(claimed: true, claimer_id: params[:user_id], deadline: nil)
+    note1 = Notification.create(user_id: space.owner_id, message: "#{claimer.name} has claimed the spot at #{space.address}")
+    note2 = Notification.create(user_id: space.claimer_id, message: "Successfully claimed parking spot at #{space.address}")
     ActionCable.server.broadcast 'notifications_channel', note1
     ActionCable.server.broadcast 'notifications_channel', note2
-    SpaceLog.create(user_id: params[:user_id], space_id: space.id, space: space, users: space.users, status: "claimed")
+    SpaceLog.create(user_id: params[:user_id], space_id: space.id, space: space, status: "claimed")
     ActionCable.server.broadcast 'spaces_channel', {action: 'update', space: space.space_serialized}
     ActionCable.server.broadcast 'users_channel', {action: 'create', user: claimer.user_serialized}
     head :ok
@@ -47,11 +45,11 @@ class SpacesController < ApplicationController
 
   def cancel_claim
     space = Space.find(params[:space_id])
-    claimer = User.find(space.claimer)
+    claimer = User.find(params[:user_id])
     space.update(claimed: false, claimer: nil)
     space_log = space_log(params[:user_id], params[:space_id])
     update_space_log(space_log, "canceled", space.id)
-    note1 = Notification.create(user_id: space.owner, message: "#{claimer.name} has canceled his claim")
+    note1 = Notification.create(user_id: space.owner_id, message: "#{claimer.name} has canceled his claim")
     note2 = Notification.create(user_id: claimer.id, message: "Successfully canceled claim on parking spot at #{space.address}")
     chatroom = Chatroom.find_by(space: space.id)
     if chatroom
@@ -67,24 +65,28 @@ class SpacesController < ApplicationController
 
   def remove_space
     space = Space.find(params[:space_id])
-    owner = User.find(space.owner)
-    space.destroy
-    note = Notification.create(user_id: space.owner, message: "Successfully canceled parking spot")
-    ActionCable.server.broadcast 'notifications_channel', note
-    ActionCable.server.broadcast 'spaces_channel', {action: 'delete', space: space}
-    ActionCable.server.broadcast 'users_channel', {action: 'update', user: owner.user_serialized}
-    head :ok
+    owner = User.find(space.owner_id)
+    if space.claimed
+      render json: {error: "Cannot cancel space while it's claimed"}.to_json, :status => :bad_request
+    else
+      space.destroy
+      note = Notification.create(user_id: space.owner_id, message: "Successfully canceled parking spot")
+      ActionCable.server.broadcast 'notifications_channel', note
+      ActionCable.server.broadcast 'spaces_channel', {action: 'delete', space: space}
+      ActionCable.server.broadcast 'users_channel', {action: 'update', user: owner.user_serialized}
+      head :ok
+    end
   end
 
   def parked
     space = Space.find(params[:space_id])
-    original_owner = User.find(space.owner)
-    claimer = User.find(space.claimer)
+    original_owner = User.find(space.owner_id)
+    claimer = User.find(space.claimer_id)
     note1 = Notification.create(user_id: original_owner.id, message: "#{claimer.name} has parked")
     note2 = Notification.create(user_id: claimer.id, message: "You have parked at #{space.address}")
-    space.update(owner: params[:user_id])
-    space_log = space_log(space.owner, space.id)
+    space_log = space_log(space.claimer_id, space.id)
     update_space_log(space_log, "parked", space.id)
+    space.update(owner_id: params[:user_id])
     chatroom = Chatroom.find_by(space: space.id)
     if chatroom
       chatroom.destroy
@@ -123,6 +125,6 @@ class SpacesController < ApplicationController
   end 
 
   def space_params
-    params.require(:space).permit(:longitude, :latitude, :address, :owner, :deadline, :image)
+    params.require(:space).permit(:longitude, :latitude, :address, :owner_id, :deadline, :image)
   end
 end

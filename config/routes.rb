@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   post '/parked' => "spaces#parked"
   post "/remove_all", to: "notifications#remove_all"
 
+  get "/users/:id/spaces", to: "users#spaces"
+
   resources :notifications, only: [:index, :destroy]
   resources :chatrooms, only: [:index, :create]
   resources :messages, only: [:create]

@@ -1,7 +1,7 @@
 class Space < ApplicationRecord
-  has_many :user_spaces, dependent: :destroy
-  has_many :users, through: :user_spaces
   validates :address, uniqueness: true
+  belongs_to :owner, class_name: 'User', foreign_key: :owner_id
+  belongs_to :claimer, optional: true, class_name: 'User', foreign_key: :claimer_id
 
   def space_serialized
     SpaceSerializer.new(self)

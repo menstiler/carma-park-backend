@@ -35,6 +35,11 @@ class UsersController < ApplicationController
     user.destroy
   end
 
+  def spaces
+    user = User.find(params[:id])
+    render json: user.spaces
+  end
+
   private
 
   def user_params
