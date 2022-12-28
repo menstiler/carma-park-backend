@@ -125,7 +125,8 @@ GEM
     nokogiri (1.13.10-x86_64-linux)
       racc (~> 1.4)
     pg (1.4.5)
-    puma (3.12.6)
+    puma (4.3.12)
+      nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.4)
     rack-cors (1.1.1)
@@ -196,7 +197,7 @@ DEPENDENCIES
   geocoder
   jwt
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
+  puma (~> 4.3)
   rack-cors
   rails (~> 7.0.4)
   redis (~> 4.0)
