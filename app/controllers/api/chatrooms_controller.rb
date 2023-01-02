@@ -1,4 +1,4 @@
-class ChatroomsController < ApplicationController
+class Api::ChatroomsController < ApplicationController
 
   def index
     chatrooms = Chatroom.all

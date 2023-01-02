@@ -1,4 +1,4 @@
-class SpacesController < ApplicationController
+class Api::SpacesController < ApplicationController
 
   def index
     spaces = Space.all

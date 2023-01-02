@@ -6,5 +6,5 @@ test:
 
 production:
   adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  url: redis://default:VIXgVYeS7kk9DJA5kpL8Fvd99Siunyqp@redis-17273.c17.us-east-1-4.ec2.cloud.redislabs.com:17273
   channel_prefix: carma-park-backend_production

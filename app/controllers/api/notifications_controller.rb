@@ -1,4 +1,4 @@
-class NotificationsController < ApplicationController
+class Api::NotificationsController < ApplicationController
 
   def index
     notifications = Notification.all

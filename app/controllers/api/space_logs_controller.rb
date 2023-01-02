@@ -1,4 +1,4 @@
-class SpaceLogsController < ApplicationController
+class Api::SpaceLogsController < ApplicationController
 
   def index
     space_logs = SpaceLog.all
