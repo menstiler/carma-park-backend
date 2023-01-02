@@ -1,12 +1,11 @@
 class MessagesChannel < ApplicationCable::Channel
   def subscribed
-    # stream_from "some_channel"
+    stop_all_streams
     chatroom = Chatroom.find(params[:chatroom])
     stream_for chatroom
   end
 
   def unsubscribed
-    raise "huh?"
-    # Any cleanup needed when channel is unsubscribed
+    stop_all_streams
   end
 end

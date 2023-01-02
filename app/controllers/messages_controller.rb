@@ -8,7 +8,7 @@ class MessagesController < ApplicationController
         MessageSerializer.new(message)
       ).serializable_hash
       MessagesChannel.broadcast_to chatroom, serialized_data
-      head :ok      
+      render json: message, status: :created     
     end
   end
 

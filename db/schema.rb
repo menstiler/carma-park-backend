@@ -73,7 +73,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_26_203506) do
     t.bigint "user_id"
     t.integer "space_id"
     t.json "space", default: {}
-    t.json "users", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_space_logs_on_user_id"
